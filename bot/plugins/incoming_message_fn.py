@@ -173,13 +173,13 @@ async def incoming_compress_message_f(bot, update):
             pass
     else:
         isAuto = True
-    user_file = str(update.from_user.id) + ".FFMpegRoBot.mkv"
-    saved_file_path = DOWNLOAD_LOCATION + "/" + user_file
+    user_file = f"{str(update.from_user.id)}.FFMpegRoBot.mkv"
+    saved_file_path = f"{DOWNLOAD_LOCATION}/{user_file}"
     LOGGER.info(saved_file_path)
     d_start = time.time()
     c_start = time.time()
     u_start = time.time()
-    status = DOWNLOAD_LOCATION + "/status.json"
+    status = f"{DOWNLOAD_LOCATION}/status.json"
     if not os.path.exists(status):
         sent_message = await bot.send_message(
             chat_id=update.chat.id,
@@ -197,7 +197,7 @@ async def incoming_compress_message_f(bot, update):
                                                 parse_mode="markdown")
         try:
             d_start = time.time()
-            status = DOWNLOAD_LOCATION + "/status.json"
+            status = f"{DOWNLOAD_LOCATION}/status.json"
             with open(status, 'w') as f:
                 statusMsg = {
                     'running': True,
@@ -442,13 +442,16 @@ async def incoming_cancel_message_f(bot, update):
             pass
         return
 
-    status = DOWNLOAD_LOCATION + "/status.json"
+    status = f"{DOWNLOAD_LOCATION}/status.json"
     if os.path.exists(status):
-        inline_keyboard = []
-        ikeyboard = []
-        ikeyboard.append(InlineKeyboardButton("Yes 🚫", callback_data=("fuckingdo").encode("UTF-8")))
+        ikeyboard = [
+            InlineKeyboardButton(
+                "Yes 🚫", callback_data=("fuckingdo").encode("UTF-8")
+            )
+        ]
+
         ikeyboard.append(InlineKeyboardButton("No 🤗", callback_data=("fuckoff").encode("UTF-8")))
-        inline_keyboard.append(ikeyboard)
+        inline_keyboard = [ikeyboard]
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
         await update.reply_text("Are you sure? 🚫 This will stop the compression!", reply_markup=reply_markup,
                                 quote=True)
